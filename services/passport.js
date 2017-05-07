@@ -12,11 +12,12 @@ var localOptions = {
 
 var localStrategy = new LocalStrategy(localOptions, function(email, password, done) {
   // Verify this username and password
-  UserFindOne({email: email}, function(err, user) {
+  User.findOne({email: email.toLowerCase()}, function(err, user) {
     if (err) { return done(err) }
     if (!user) { return done(null,false) }
     user.comparePassword(password, function(err, isMatch) {
       if (err) { return done(err) }
+      if (!isMatch) { return done(null, false) }
       return done(null, user);
     })
   });
